@@ -33,11 +33,16 @@ void Groundhog::loop()
         getline(std::cin, line);
         if (line == "STOP")
             break;
-        _values.push_back(std::stod(line));
-        get_increase();
-        get_evolution();
-        get_deviation();
-        chek_switch();
+        try {
+            std::stod(line);
+            _values.push_back(std::stod(line));
+            get_increase();
+            get_evolution();
+            get_deviation();
+            chek_switch();
+        } catch (std::exception &e) {
+            exit(84);
+        }
     }
     std::cout << "Global tendency switched " << _switcher << " times" << std::endl;
 }
@@ -46,15 +51,18 @@ void Groundhog::get_increase()
 {
     double sumIncrease = 0;
     int countIncrease = 0;
+    _increase = 0;
 
     if (_values.size() < _period + 1) {
         std::cout << "g=nan\t\t";
         return;
     }
-    _increase = (_values[_values.size() - 1] - _values[_values.size() - _period - 1]) / _period;
-    if (_increase < 0) {
-        _increase = 0;
+    for (size_t i = _values.size() - _period; i < _values.size(); ++i) {
+        if (_values[i] > _values[i - 1]) {
+            sumIncrease += _values[i] - _values[i - 1];
+        }
     }
+    _increase = sumIncrease / _period;
     std::cout << "g=" << std::setprecision(2) << _increase << "\t\t";
 }
 
