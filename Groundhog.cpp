@@ -31,8 +31,13 @@ void Groundhog::loop()
     std::string line;
     while (1) {
         getline(std::cin, line);
-        if (line == "STOP")
-            break;
+        if (line == "STOP") {
+            if (_values.size() < _period) {
+                exit(84);
+            } else {
+                break;
+            }
+        }
         try {
             std::stod(line);
             _values.push_back(std::stod(line));
