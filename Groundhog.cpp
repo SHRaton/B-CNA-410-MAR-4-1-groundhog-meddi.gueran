@@ -33,6 +33,7 @@ void Groundhog::loop()
         getline(std::cin, line);
         if (line == "STOP") {
             if (_values.size() < _period) {
+                std::cout << "Global tendency switched " << _switcher << " times" << std::endl;
                 exit(84);
             } else {
                 break;
