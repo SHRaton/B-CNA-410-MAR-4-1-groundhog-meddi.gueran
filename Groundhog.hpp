@@ -13,6 +13,7 @@
 #include <vector>
 #include <cmath>
 #include <iomanip>
+#include <algorithm>
 
 class Groundhog {
     public:
@@ -23,12 +24,14 @@ class Groundhog {
         void get_increase();
         void get_evolution();
         void get_deviation();
-        void chek_switch();
+        void check_switch();
+        void check_weird();
         void get_predict();
     protected:
     private:
         int _period;
         int _switcher;
+        std::vector<int> _weird;
         std::vector<double> _values;
         double _increase;
         double _evolution;

@@ -34,10 +34,14 @@ void Groundhog::loop()
         if (line == "STOP") {
             if (_values.size() < _period) {
                 std::cout << "Global tendency switched " << _switcher << " times" << std::endl;
+                std::cout << "Not enough values" << std::endl;
                 exit(84);
             } else {
+                std::cout << "Global tendency switched " << _switcher << " times" << std::endl;
+                check_weird();
                 break;
             }
+
         }
         try {
             std::stod(line);
@@ -45,12 +49,11 @@ void Groundhog::loop()
             get_increase();
             get_evolution();
             get_deviation();
-            chek_switch();
+            check_switch();
         } catch (std::exception &e) {
             exit(84);
         }
     }
-    std::cout << "Global tendency switched " << _switcher << " times" << std::endl;
 }
 
 void Groundhog::get_increase()
@@ -106,7 +109,7 @@ void Groundhog::get_deviation()
     std::cout << "s=" << std::fixed << std::setprecision(2) << _deviation <<"\t";
 }
 
-void Groundhog::chek_switch()
+void Groundhog::check_switch()
 {
     if (_values.size() < _period) {
         return;
@@ -118,9 +121,61 @@ void Groundhog::chek_switch()
         std::cout << std::endl;
 }
 
-// Créer une fonction qui prédit la prochaine valeur en fonction de la tendance actuelle
-// Stocker la valeur prédite dans un attribut de la classe
-// Faire la différence entre la valeur prédite et la valeur réelle
-// stocker dans un std::pair la valeur donner et la différence
-// Trier les valeurs dans l'ordre décroissant en fonction de la différence
-// Afficher les 5 premières valeurs après le tri
+double sort_by_diff(const std::pair<double, double>& a, const std::pair<double, double>& b)
+{
+    return a.second < b.second;
+};
+
+std::vector<std::pair<double, double>> calculate_weird_values(const std::vector<double>& _values, int _period)
+{
+    std::vector<std::pair<double, double>> weird_values;
+    for (int i = 0; i < _values.size() - _period + 1; ++i) {
+        double mean = 0.0;
+        double et = 0.0;
+        double ecart = 0.0;
+        int index = _period - 1;
+        // Calcul de la moyenne mobile
+        for (int j = i; j < i + _period; ++j) {
+            mean += _values[j];
+        }
+        mean /= _period;
+
+        // Calcul de l'écart-type
+        for (int j = i; j < i + _period; ++j) {
+            et += (_values[j] - mean) * (_values[j] - mean);
+        }
+        et = std::sqrt(et / _period);
+
+        double bb_upper = mean + (2 * et);
+        double bb_lower = mean - (2 * et);
+        //printf("valeur = %f / moyenne = %f / ecart-type = %f / bb_sup = %f (%f) / bb_inf = %f (%f)\n",_values[i + index], mean, et, bb_upper, bb_upper - _values[i + index], bb_lower, _values[i + index] - bb_lower);
+
+        if (_values[i + index] - bb_lower > (bb_upper - _values[i + index])) {
+            ecart = bb_upper - _values[i + index];
+        } else {
+            ecart = _values[i + index] - bb_lower;
+        }
+
+        weird_values.push_back(std::make_pair(_values[i + index], ecart));
+    }
+    std::sort(weird_values.begin(), weird_values.end(), sort_by_diff);
+    return (weird_values);
+}
+
+void Groundhog::check_weird()
+{
+    std::vector<std::pair<double, double>> weird_values;
+    weird_values = calculate_weird_values(_values, _period);
+
+    if (weird_values.size() < 5) {
+        return;
+    }
+    std::cout << "5 weirdest values are [";
+    for (int i = 0; i < 5 && i < weird_values.size(); ++i) {
+        std::cout << std::fixed << std::setprecision(1) << weird_values[i].first;
+        if (i < 4) {
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]" << std::endl;
+}
