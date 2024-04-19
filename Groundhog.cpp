@@ -114,7 +114,7 @@ void Groundhog::check_switch()
     if (_values.size() < _period) {
         return;
     }
-    if (_last_evolution < 0 && _evolution > 0 || _last_evolution > 0 && _evolution < 0) {
+    if (_last_evolution < 0 && _evolution >= 0 || _last_evolution >= 0 && _evolution < 0) {
         _switcher += 1;
         std::cout << "\ta switch occurs" << std::endl;
     } else
