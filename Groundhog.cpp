@@ -69,7 +69,7 @@ void Groundhog::get_increase()
         std::cout << "g=nan\t\t";
         return;
     }
-    for (size_t i = _values.size() - _period; i < _values.size(); ++i) {
+    for (size_t i = _values.size() - _period; i < _values.size(); i++) {
         if (_values[i] > _values[i - 1]) {
             sumIncrease += _values[i] - _values[i - 1];
         }
@@ -86,9 +86,9 @@ void Groundhog::get_evolution()
         std::cout << "r=nan%\t\t";
         return;
     }
-    _evolution = (_values[size - 1] - _values[size - _period - 1]) / _values[size - _period - 1] * 100.0;
-    int evolution = round(_evolution);
-    std::cout << "r=" << std::setprecision(1) << evolution << "%\t\t";
+    _evolution = round((_values[size - 1] - _values[size - _period - 1]) / _values[size - _period - 1] * 100.0);
+    //int evolution = round(_evolution);
+    std::cout << "r=" << std::setprecision(1) << _evolution << "%\t\t";
 }
 
 void Groundhog::get_deviation()
@@ -109,7 +109,7 @@ void Groundhog::get_deviation()
         sum += pow(_values[i] - mean, 2);
     }
     _deviation = sqrt(sum / _period);
-    std::cout << "s=" << std::fixed << std::setprecision(2) << _deviation <<"\t";
+    std::cout << "s=" << std::fixed << std::setprecision(2) << _deviation;
 }
 
 void Groundhog::check_switch()
