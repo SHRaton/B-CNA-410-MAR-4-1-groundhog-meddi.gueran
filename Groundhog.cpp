@@ -43,6 +43,9 @@ void Groundhog::loop()
             }
 
         }
+        if (line.find(',') != std::string::npos) {
+            exit(84);
+        }
         try {
             std::stod(line);
             _values.push_back(std::stod(line));
