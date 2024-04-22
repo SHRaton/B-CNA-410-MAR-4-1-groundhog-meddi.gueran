@@ -86,9 +86,9 @@ void Groundhog::get_evolution()
         std::cout << "r=nan%\t\t";
         return;
     }
-    _evolution = round((_values[size - 1] - _values[size - _period - 1]) / _values[size - _period - 1] * 100.0);
-    //int evolution = round(_evolution);
-    std::cout << "r=" << std::setprecision(1) << _evolution << "%\t\t";
+    _evolution = (_values[size - 1] - _values[size - _period - 1]) / _values[size - _period - 1] * 100.0;
+    int evolution = round(_evolution);
+    std::cout << "r=" << std::setprecision(1) << evolution << "%\t\t";
 }
 
 void Groundhog::get_deviation()
@@ -119,7 +119,7 @@ void Groundhog::check_switch()
     }
     if (_last_evolution < 0 && _evolution >= 0 || _last_evolution >= 0 && _evolution < 0) {
         _switcher += 1;
-        std::cout << "\ta switch occurs" << std::endl;
+        std::cout << "\t\ta switch occurs" << std::endl;
     } else
         std::cout << std::endl;
 }

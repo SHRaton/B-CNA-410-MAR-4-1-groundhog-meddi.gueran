@@ -34,7 +34,7 @@ class Groundhog {
         std::vector<int> _weird;
         std::vector<double> _values;
         double _increase;
-        int _evolution;
+        double _evolution;
         double _deviation;
         double _last_evolution;
         std::pair<double, double> _predict;
