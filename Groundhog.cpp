@@ -82,7 +82,7 @@ void Groundhog::get_increase()
         }
     }
     _increase = sumIncrease / _period;
-    std::cout << "g=" << std::setprecision(2) << _increase << "\t\t";
+    std::cout << "g=" << std::setprecision(2) << _increase << "            ";
 }
 
 // Calcul de R
@@ -99,7 +99,7 @@ void Groundhog::get_evolution()
     _evolution /= _values[_values.size() - (_period + 1)];
     _evolution *= 100;
     int evolution = round(_evolution);
-    std::cout << "r=" << std::setprecision(1) << evolution << "%\t\t";
+    std::cout << "r=" << std::setprecision(1) << evolution << "%            ";
 }
 
 // Calcul de S
@@ -133,8 +133,8 @@ void Groundhog::check_switch()
         return;
     }
     if (_last_evolution < 0 && _evolution >= 0 || _last_evolution >= 0 && _evolution < 0) {
-        _switcher += 1;
-        std::cout << "\ta switch occurs" << std::endl;
+        _switcher++;
+        std::cout << "            a switch occurs" << std::endl;
     } else
         std::cout << std::endl;
 }
