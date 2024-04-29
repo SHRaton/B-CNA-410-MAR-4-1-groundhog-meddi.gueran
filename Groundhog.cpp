@@ -59,6 +59,7 @@ void Groundhog::loop()
     }
 }
 
+// Calcul de G
 void Groundhog::get_increase()
 {
     double sumIncrease = 0;
@@ -69,7 +70,13 @@ void Groundhog::get_increase()
         std::cout << "g=nan\t\t";
         return;
     }
-    for (size_t i = _values.size() - _period; i < _values.size(); i++) {
+    for (size_t i = _values.size() - _period; i != _values.size(); i++) {
+        // Modifi ICI
+        float tmp = _values[i] - _values[i - 1];
+        if (tmp < 0) {
+            sumIncrease += 0;
+        }
+        /////
         if (_values[i] > _values[i - 1]) {
             sumIncrease += _values[i] - _values[i - 1];
         }
@@ -78,6 +85,7 @@ void Groundhog::get_increase()
     std::cout << "g=" << std::setprecision(2) << _increase << "\t\t";
 }
 
+// Calcul de R
 void Groundhog::get_evolution()
 {
     int size = _values.size();
@@ -86,11 +94,15 @@ void Groundhog::get_evolution()
         std::cout << "r=nan%\t\t";
         return;
     }
-    _evolution = (_values[size - 1] - _values[size - _period - 1]) / _values[size - _period - 1] * 100.0;
+    // Modifie ICI
+    _evolution = (_values[size - 1] - _values[_values.size() - (_period + 1)]);
+    _evolution /= _values[_values.size() - (_period + 1)];
+    _evolution *= 100;
     int evolution = round(_evolution);
     std::cout << "r=" << std::setprecision(1) << evolution << "%\t\t";
 }
 
+// Calcul de S
 void Groundhog::get_deviation()
 {
     double sum = 0;
@@ -100,18 +112,21 @@ void Groundhog::get_deviation()
         std::cout << "s=nan" << std::endl;
         return;
     }
-    for (size_t i = _values.size() - _period; i < _values.size(); ++i) {
+    // Modife ICI
+    for (size_t i = _values.size() - _period; i != _values.size(); ++i) {
         sum += _values[i];
     }
     mean = sum / _period;
     sum = 0;
-    for (size_t i = _values.size() - _period; i < _values.size(); ++i) {
+    for (size_t i = _values.size() - _period; i != _values.size(); ++i) {
         sum += pow(_values[i] - mean, 2);
     }
-    _deviation = sqrt(sum / _period);
+    _deviation = sum / _period;
+    _deviation = sqrt(_deviation);
     std::cout << "s=" << std::fixed << std::setprecision(2) << _deviation;
 }
 
+// Regarde s'il y a des switchs
 void Groundhog::check_switch()
 {
     if (_values.size() < _period) {
@@ -119,7 +134,7 @@ void Groundhog::check_switch()
     }
     if (_last_evolution < 0 && _evolution >= 0 || _last_evolution >= 0 && _evolution < 0) {
         _switcher += 1;
-        std::cout << "\t\ta switch occurs" << std::endl;
+        std::cout << "\ta switch occurs" << std::endl;
     } else
         std::cout << std::endl;
 }
@@ -165,6 +180,7 @@ std::vector<std::pair<double, double>> calculate_weird_values(const std::vector<
     return (weird_values);
 }
 
+// Affiche les 5 valeurs les plus éloignées de la moyenne mobile
 void Groundhog::check_weird()
 {
     std::vector<std::pair<double, double>> weird_values;
