@@ -88,17 +88,21 @@ void Groundhog::get_increase()
 // Calcul de R
 void Groundhog::get_evolution()
 {
-    int size = _values.size();
     _last_evolution = _evolution;
     if (_values.size() < _period + 1) {
         std::cout << "r=nan%            ";
         return;
     }
     // Modifie ICI
-    _evolution = (_values[size - 1] - _values[_values.size() - (_period + 1)]);
-    _evolution /= _values[_values.size() - (_period + 1)];
-    _evolution *= 100;
-    int evolution = round(_evolution);
+    float actual = _values[_values.size() - 1];
+    float previous = _values[_values.size() - _period - 1];
+    if (previous == 0) {
+        _evolution = 0;
+        std::cout << "r=0%            ";
+        return;
+    }
+    _evolution = ((actual - previous) * 100) / previous;
+    int evolution = std::round(((actual - previous) * 100 )/ previous);
     std::cout << "r=" << std::setprecision(1) << evolution << "%            ";
 }
 
@@ -132,7 +136,7 @@ void Groundhog::check_switch()
     if (_values.size() < _period) {
         return;
     }
-    if (_last_evolution < 0 && _evolution >= 0 || _last_evolution >= 0 && _evolution < 0) {
+    if (_last_evolution * _evolution < 0) {
         _switcher++;
         std::cout << "            a switch occurs" << std::endl;
     } else
