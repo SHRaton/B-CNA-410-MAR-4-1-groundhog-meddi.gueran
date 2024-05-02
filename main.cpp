@@ -23,6 +23,10 @@ int main(int argc, char **argv)
         return 84;
     }
     if (argc == 2) {
+        if (std::stoi(argv[1]) <= 0) {
+            std::cerr << "Usage: ./groundhog period" << std::endl;
+            return 84;
+        }
         groundhog.setPeriod(std::stoi(argv[1]));
         groundhog.loop();
     }
