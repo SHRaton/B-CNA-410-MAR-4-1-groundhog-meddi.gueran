@@ -67,7 +67,7 @@ void Groundhog::get_increase()
     _increase = 0;
 
     if (_values.size() < _period + 1) {
-        std::cout << "g=nan\t\t";
+        std::cout << "g=nan            ";
         return;
     }
     for (size_t i = _values.size() - _period; i != _values.size(); i++) {
@@ -91,7 +91,7 @@ void Groundhog::get_evolution()
     int size = _values.size();
     _last_evolution = _evolution;
     if (_values.size() < _period + 1) {
-        std::cout << "r=nan%\t\t";
+        std::cout << "r=nan%            ";
         return;
     }
     // Modifie ICI
